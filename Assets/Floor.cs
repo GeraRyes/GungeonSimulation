@@ -13,8 +13,8 @@ public class Floor{
                RemainingRoomsOnFloor;
 
     //Boss and chest room counters
-    public int ChestRoomsGenerated,
-                BossRoomsGenerated;
+    public int ChestRoomsLeft,
+                BossRoomsLeft;
 
     //Chance of pickups appearing; and chance per pickup type
     public float PickupChance,
@@ -38,7 +38,7 @@ public class Floor{
     public PlayerFloorData PFD;
 
     //Random Float
-    
+    public float R;
 
     Floor()
     { 
@@ -49,8 +49,8 @@ public class Floor{
         this.RoomsOnFloor = 13;
         this.RemainingRoomsOnFloor = 13;
 
-        this.ChestRoomsGenerated = 0;
-        this.BossRoomsGenerated = 0;
+        this.ChestRoomsLeft = 0;
+        this.BossRoomsLeft = 0;
 
         this.PickupChance = 26;
         this.KeyChance = 24.36f;
@@ -69,60 +69,73 @@ public class Floor{
 
         this.PFD = new PlayerFloorData(0);
 
+        this.R = 0;
     }
 
     public void TransitionToNewRoom()
     {
+        //If it's the first room
         if (this.TransitionToBossChance == 0)
         {
-            float R = Random.Range(0f, 100f);
+            this.R = Random.Range(0f, 100f);
             
-            if ((R-this.TransitionToChestChance)<0)
+            //If transitioned to chest room
+            if ((this.RMinusChance(this.TransitionToChestChance))<0)
             {
-                
+                this.PFD.AddRoom(this.GenerateChest(), "None");
+                this.ChestRoomsLeft--;
             }
+            //If transitiones to normal room
             else
             {
-                //Codigo para crear un cuarto
+                this.PFD.AddRoom(ChestDropRoomClear(), GeneratePickup());
             }
         }
+        //If it's not the first room
         else
         {
-
-            float R = Random.Range(0f, 100f);
-            if ((R - this.TransitionToBossChance) < 0)
+            this.R = Random.Range(0f, 100f);
+            //If transitioned to boss room
+            if ((this.RMinusChance(this.TransitionToBossChance)) < 0)
             {
-                //Codigo para crear un boss
+                this.PFD.AddRoom(GenerateChest(), "Key");
+                this.BossRoomsLeft = 0;
             }
-            else if ((R-this.TransitionToChestChance)<0)
+            //If transitioned to chest room
+            else if ((this.RMinusChance(this.TransitionToChestChance))<0)
             {
-                //Codigo para crear un chest
+                this.PFD.AddRoom(this.GenerateChest(), "None");
+                this.ChestRoomsLeft--;
             }
+            //If transitiones to normal room
             else
             {
-                //Codigo para crear un cuarto
+                this.PFD.AddRoom(ChestDropRoomClear(), GeneratePickup());
             }
         }
+
+        this.RemainingRoomsOnFloor--;
+        this.AdjustProbability();
     }
     
-
+    //Get a string with the generated chest in a room
     public string GenerateChest()
     {
         string GeneratedChest;
-        float R = Random.Range(0, 100);
-        if (R - this.SChestChance <= 0)
+        this.R = Random.Range(0, 100);
+        if (this.RMinusChance(this.SChestChance) <= 0)
         {
             GeneratedChest = "S";
         }
-        else if (R - this.SChestChance <= 0)
+        else if (this.RMinusChance(this.AChestChance) <= 0)
         {
             GeneratedChest = "A";
         }
-        else if (R - this.SChestChance <= 0)
+        else if (this.RMinusChance(this.BChestChance) <= 0)
         {
             GeneratedChest = "B";
         }
-        else if (R - this.SChestChance <= 0)
+        else if (this.RMinusChance(this.CChestChance) <= 0)
         {
             GeneratedChest = "C";
         }
@@ -132,5 +145,67 @@ public class Floor{
         }
 
             return GeneratedChest;
+    }
+
+    public string GeneratePickup()
+    {
+        string Pickup;
+        this.R = Random.Range(0, 100);
+
+        //If a pickup is generated
+        if (this.RMinusChance(this.PickupChance) <= 0)
+        {
+            this.R = Random.Range(0, 100);
+            
+            //If the pickup is a key
+            if (this.RMinusChance(this.KeyChance) <= 0)
+            {
+                Pickup = "Key";
+            }
+            //If the pickup is something else
+            else
+            {
+                Pickup = "Other";
+            }
+        }
+        //If no pickup was generated
+        else
+        {
+            Pickup = "None";
+        }
+        return Pickup;
+    }
+
+    public string ChestDropRoomClear()
+    {
+        string GeneratedChest;
+        this.R = Random.Range(0, 100);
+        if (this.RMinusChance(this.ChestAtClearChance) <= 0)
+        {
+            GeneratedChest = this.GenerateChest();
+            this.ChestAtClearChance = 1;
+        }
+        else{
+            GeneratedChest = "None";
+            this.ChestAtClearChance += this.ChestIncrementChance;
+        }
+        return GeneratedChest;
+    }
+
+
+    //Adjust the probabilities after each room
+    public void AdjustProbability()
+    {
+        //Adjust remaining floors
+        this.TransitionToRoomChance = this.RemainingRoomsOnFloor - this.ChestRoomsLeft - this.BossRoomsLeft / this.RemainingRoomsOnFloor;
+        this.TransitionToChestChance = this.ChestRoomsLeft / this.RemainingRoomsOnFloor;
+        this.TransitionToBossChance = this.BossRoomsLeft / this.RemainingRoomsOnFloor;
+
+    }
+
+    public float RMinusChance(float chance)
+    {
+        this.R = this.R - chance;
+        return R;
     }
 }
