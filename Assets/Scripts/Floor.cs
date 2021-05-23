@@ -134,7 +134,7 @@ public class Floor{
             //If transitioned to boss room
             if ((this.RMinusChance(this.TransitionToBossChance)) < 0)
             {
-                this.PFD.AddRoom(GenerateChest(), "Key");
+                this.PFD.AddRoom(this.GenerateChest(), "Key");
                 this.BossRoomsLeft = 0;
             }
             //If transitioned to chest room
