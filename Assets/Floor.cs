@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Floor{
     //Room transition percentage
@@ -9,8 +7,7 @@ public class Floor{
                 TransitionToChestChance;
 
     //Number of rooms per floor and remaining rooms
-    public int RoomsOnFloor,
-               RemainingRoomsOnFloor;
+    public int RemainingRoomsOnFloor;
 
     //Boss and chest room counters
     public int ChestRoomsLeft,
@@ -40,17 +37,14 @@ public class Floor{
     //Random Float
     public float R;
 
-    Floor()
-    { 
-        this.TransitionToRoomChance = 85.18f;
-        this.TransitionToBossChance = 0;
-        this.TransitionToChestChance = 14.82f;
+    //
+    public bool FirstRoomFlag;
 
-        this.RoomsOnFloor = 13;
-        this.RemainingRoomsOnFloor = 13;
-
-        this.ChestRoomsLeft = 0;
-        this.BossRoomsLeft = 0;
+    public Floor(int FloorNumber)
+    {
+        //Universal variables
+        this.ChestRoomsLeft = 2;
+        this.BossRoomsLeft = 1;
 
         this.PickupChance = 26;
         this.KeyChance = 24.36f;
@@ -58,18 +52,60 @@ public class Floor{
         this.ChestAtClearChance = 1;
         this.ChestIncrementChance = 9;
 
-
-        this.DChestChance = 10;
-        this.CChestChance = 50;
-        this.BChestChance = 35;
-        this.AChestChance = 4;
-        this.SChestChance = 1;
-
-        this.currentFloor = 1;
-
-        this.PFD = new PlayerFloorData(0);
-
+        this.PFD = new PlayerFloorData();
         this.R = 0;
+        this.FirstRoomFlag = false;
+
+        //Per floor variables
+        switch (FloorNumber)
+        {
+            case 1:
+                this.RemainingRoomsOnFloor = 13;
+                this.DChestChance = 35;
+                this.CChestChance = 32;
+                this.BChestChance = 20;
+                this.AChestChance = 9;
+                this.SChestChance = 4;
+                this.currentFloor = 1;
+                break;
+            case 2:
+                this.RemainingRoomsOnFloor = 16;
+                this.DChestChance = 10;
+                this.CChestChance = 37;
+                this.BChestChance = 40;
+                this.AChestChance = 9;
+                this.SChestChance = 4;
+                this.currentFloor = 2;
+                break;
+            case 3:
+                this.RemainingRoomsOnFloor = 20;
+                this.DChestChance = 2;
+                this.CChestChance = 26;
+                this.BChestChance = 54;
+                this.AChestChance = 12.5f;
+                this.SChestChance = 5.5f;
+                this.currentFloor = 3;
+                break;
+            case 4:
+                this.RemainingRoomsOnFloor = 22;
+                this.DChestChance = 2;
+                this.CChestChance = 20;
+                this.BChestChance = 50;
+                this.AChestChance = 20;
+                this.SChestChance = 8;
+                this.currentFloor = 4;
+                break;
+            case 5:
+                this.RemainingRoomsOnFloor = 24;
+                this.DChestChance = 0;
+                this.CChestChance = 10;
+                this.BChestChance = 42.5f;
+                this.AChestChance = 35;
+                this.SChestChance = 12.5f;
+                this.currentFloor = 5;
+                break;
+        }
+        
     }
 
     public void TransitionToNewRoom()
@@ -115,7 +151,11 @@ public class Floor{
         }
 
         this.RemainingRoomsOnFloor--;
-        this.AdjustProbability();
+        if (this.RemainingRoomsOnFloor != 0)
+        {
+            this.AdjustProbability();
+        }
+        
     }
     
     //Get a string with the generated chest in a room
@@ -197,9 +237,20 @@ public class Floor{
     public void AdjustProbability()
     {
         //Adjust remaining floors
-        this.TransitionToRoomChance = this.RemainingRoomsOnFloor - this.ChestRoomsLeft - this.BossRoomsLeft / this.RemainingRoomsOnFloor;
-        this.TransitionToChestChance = this.ChestRoomsLeft / this.RemainingRoomsOnFloor;
-        this.TransitionToBossChance = this.BossRoomsLeft / this.RemainingRoomsOnFloor;
+        if (!this.FirstRoomFlag)
+        {
+            this.TransitionToRoomChance = this.RemainingRoomsOnFloor - this.ChestRoomsLeft/ this.RemainingRoomsOnFloor;
+            this.TransitionToChestChance = this.ChestRoomsLeft / this.RemainingRoomsOnFloor;
+            this.TransitionToBossChance = 0;
+            this.FirstRoomFlag = true;
+        }
+        else
+        {
+            this.TransitionToRoomChance = this.RemainingRoomsOnFloor - this.ChestRoomsLeft - this.BossRoomsLeft / this.RemainingRoomsOnFloor;
+            this.TransitionToChestChance = this.ChestRoomsLeft / this.RemainingRoomsOnFloor;
+            this.TransitionToBossChance = this.BossRoomsLeft / this.RemainingRoomsOnFloor;
+        }
+        
 
     }
 
