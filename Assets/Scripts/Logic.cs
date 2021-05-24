@@ -33,6 +33,18 @@ public class Logic : MonoBehaviour
                         ChestB,
                         ChestC,
                         ChestD;
+    public Text         DItemText,
+                        CItemText,
+                        BItemText,
+                        AItemText,
+                        SItemText,
+                        DChestText,
+                        CChestText,
+                        BChestText,
+                        AChestText,
+                        SChestText,
+                        KeyText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -166,26 +178,61 @@ public class Logic : MonoBehaviour
                 tempColor.a = 1f;
                 this.ChestDrop.color = tempColor;
                 this.ChestDrop.sprite = this.ChestS;
+                this.SChestText.text = (int.Parse(this.SChestText.text) + 1).ToString();
+                if (this.NumberOfKeys > 0)
+                {
+                    this.SItemText.text = (int.Parse(this.SItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                }
                 break;
             case "A":
                 tempColor.a = 1f;
                 this.ChestDrop.color = tempColor;
                 this.ChestDrop.sprite = this.ChestA;
+                this.AChestText.text = (int.Parse(this.AChestText.text) + 1).ToString();
+                if (this.NumberOfKeys > 0)
+                {
+                    this.AItemText.text = (int.Parse(this.AItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                }
                 break;
             case "B":
                 tempColor.a = 1f;
                 this.ChestDrop.color = tempColor;
                 this.ChestDrop.sprite = this.ChestB;
+                this.BChestText.text = (int.Parse(this.BChestText.text) + 1).ToString();
+                if (this.NumberOfKeys > 0)
+                {
+                    this.BItemText.text = (int.Parse(this.BItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                }
                 break;
             case "C":
                 tempColor.a = 1f;
                 this.ChestDrop.color = tempColor;
                 this.ChestDrop.sprite = this.ChestC;
+                this.CChestText.text = (int.Parse(this.CChestText.text) + 1).ToString();
+                if (this.NumberOfKeys > 0)
+                {
+                    this.CItemText.text = (int.Parse(this.CItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                }
                 break;
             case "D":
                 tempColor.a = 1f;
                 this.ChestDrop.color = tempColor;
                 this.ChestDrop.sprite = this.ChestD;
+                this.DChestText.text = (int.Parse(this.DChestText.text) + 1).ToString();
+                if (this.NumberOfKeys > 0)
+                {
+                    this.DItemText.text = (int.Parse(this.DItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                }
                 break;
             case "None":
                 tempColor.a = 0f;
@@ -197,6 +244,8 @@ public class Logic : MonoBehaviour
             case "Key":
                 tempColor.a = 1f;
                 this.KeyDrop.color = tempColor;
+                this.NumberOfKeys++;
+                this.KeyText.text = NumberOfKeys.ToString();
                 break;
             default:
                 tempColor.a = 0f;
