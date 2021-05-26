@@ -281,7 +281,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 82d53aa6e69968d4d95fce1664877854, type: 3}
+  m_Texture: {fileID: 2800000, guid: 428906e9d4505be46b2ee765be089efc, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 751df0aff8954db47b11003d3568ab46, type: 3}
+  m_Texture: {fileID: 2800000, guid: 42ddcc0a9314fef4da2a0427d5aa8101, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1039,11 +1039,11 @@ MonoBehaviour:
   BItemText: {fileID: 1763301938}
   AItemText: {fileID: 1370922485}
   SItemText: {fileID: 1919936205}
-  DCHestText: {fileID: 912413904}
-  CCHestText: {fileID: 280001338}
-  BCHestText: {fileID: 1950198273}
-  ACHestText: {fileID: 309734722}
-  SCHestText: {fileID: 1676317179}
+  DChestText: {fileID: 912413904}
+  CChestText: {fileID: 280001338}
+  BChestText: {fileID: 1950198273}
+  AChestText: {fileID: 309734722}
+  SChestText: {fileID: 1676317179}
   KeyText: {fileID: 2128069171}
 --- !u!4 &693059374
 Transform:
@@ -1505,7 +1505,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 67a52bf6048b0674e8000770641cf96f, type: 3}
+  m_Texture: {fileID: 2800000, guid: 1dd6c8daa18e1a4498d7a045a6f26f41, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -2155,7 +2155,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: af10dd9b6a2a44745bec5a0531142872, type: 3}
+  m_Texture: {fileID: 2800000, guid: f36a42b007a6cdc4fa3ffb0344f254bf, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -2896,7 +2896,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: b5f76851ffbc19a49acd0330a6fe91e0, type: 3}
+  m_Texture: {fileID: 2800000, guid: ca9f0c8cec8fc0c4aa12812529540e54, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

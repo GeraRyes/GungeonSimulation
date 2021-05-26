@@ -8,15 +8,15 @@ using Object = UnityEngine.Object;
 
 public class Logic : MonoBehaviour
 {
-    public Floor Floor1,
+    private Floor Floor1,
                         Floor2,
                         Floor3,
                         Floor4,
                         Floor5,
                         CurrentFloor;
-    public int          FloorNumber;
+    private int          FloorNumber;
     public int          NumberOfKeys;
-    public FloorReport  Floor1Report,
+    private FloorReport  Floor1Report,
                         Floor2Report,
                         Floor3Report,
                         Floor4Report,
@@ -24,10 +24,7 @@ public class Logic : MonoBehaviour
     public SpriteRenderer Room1SR,
                             ChestDrop,
                             KeyDrop;
-    public Transform Room1Transform;
-    public int          i;
-    public bool         Room1Flag,
-                        Room2Flag;
+    private int          i;
     public Sprite       ChestS,
                         ChestA,
                         ChestB,
@@ -44,6 +41,22 @@ public class Logic : MonoBehaviour
                         AChestText,
                         SChestText,
                         KeyText;
+    public Text PlusDChest,
+                        PlusCChest,
+                        PlusBChest,
+                        PlusAChest,
+                        PlusSChest,
+                        PlusDItem,
+                        PlusCItem,
+                        PlusBItem,
+                        PlusAItem,
+                        PlusSItem,
+                        PlusKey,
+                        MinusKey;
+    public AudioManager AM;
+    public AudioClip    ChestSFX,
+                        KeySFX,
+                        BothSFX;
 
 
     // Start is called before the first frame update
@@ -52,11 +65,6 @@ public class Logic : MonoBehaviour
         this.FloorNumber = 1;
         this.SetFloorProbability();
         this.NumberOfKeys = 1;
-        this.Room1Transform.position = new Vector3(0, -1, 0);
-
-        
-        this.Room1Flag = true;
-        this.Room2Flag = true;
 
         var tempColor = this.KeyDrop.color;
         tempColor.a = 0f;
@@ -77,6 +85,17 @@ public class Logic : MonoBehaviour
         {
             if (this.ChestDrop.color.a == 1f || this.KeyDrop.color.a == 1f)
             {
+                if (this.ChestDrop.color.a == 1f && this.KeyDrop.color.a == 1f)
+                {
+                    AM.Play(BothSFX);
+                }else if(this.ChestDrop.color.a == 1f)
+                {
+                    AM.Play(ChestSFX);
+                }
+                else
+                {
+                    AM.Play(KeySFX);
+                }
                 yield return new WaitForSeconds(2f);
             }
             else
@@ -168,76 +187,33 @@ public class Logic : MonoBehaviour
 
     }
 
+    public void ResetPlusMinus()
+    {
+        this.PlusDChest.enabled =false;
+        this.PlusCChest.enabled = false;
+        this.PlusBChest.enabled = false;
+        this.PlusAChest.enabled = false;
+        this.PlusSChest.enabled = false;
+        this.PlusDItem.enabled = false;
+        this.PlusCItem.enabled = false;
+        this.PlusBItem.enabled = false;
+        this.PlusAItem.enabled = false;
+        this.PlusSItem.enabled = false;
+        this.PlusKey.enabled = false;
+        this.MinusKey.enabled = false;
+    }
+
     public void KeyChestOpacity()
     {
+        this.ResetPlusMinus();
         Room tmp = this.CurrentFloor.PFD.GetRoom(i);
         var tempColor = this.KeyDrop.color;
-        switch (tmp.GeneratedChest)
+        if (tmp.GeneratedPickup == "Key")
         {
-            case "S":
-                tempColor.a = 1f;
-                this.ChestDrop.color = tempColor;
-                this.ChestDrop.sprite = this.ChestS;
-                this.SChestText.text = (int.Parse(this.SChestText.text) + 1).ToString();
-                if (this.NumberOfKeys > 0)
-                {
-                    this.SItemText.text = (int.Parse(this.SItemText.text) + 1).ToString();
-                    this.NumberOfKeys--;
-                    this.KeyText.text = NumberOfKeys.ToString();
-                }
-                break;
-            case "A":
-                tempColor.a = 1f;
-                this.ChestDrop.color = tempColor;
-                this.ChestDrop.sprite = this.ChestA;
-                this.AChestText.text = (int.Parse(this.AChestText.text) + 1).ToString();
-                if (this.NumberOfKeys > 0)
-                {
-                    this.AItemText.text = (int.Parse(this.AItemText.text) + 1).ToString();
-                    this.NumberOfKeys--;
-                    this.KeyText.text = NumberOfKeys.ToString();
-                }
-                break;
-            case "B":
-                tempColor.a = 1f;
-                this.ChestDrop.color = tempColor;
-                this.ChestDrop.sprite = this.ChestB;
-                this.BChestText.text = (int.Parse(this.BChestText.text) + 1).ToString();
-                if (this.NumberOfKeys > 0)
-                {
-                    this.BItemText.text = (int.Parse(this.BItemText.text) + 1).ToString();
-                    this.NumberOfKeys--;
-                    this.KeyText.text = NumberOfKeys.ToString();
-                }
-                break;
-            case "C":
-                tempColor.a = 1f;
-                this.ChestDrop.color = tempColor;
-                this.ChestDrop.sprite = this.ChestC;
-                this.CChestText.text = (int.Parse(this.CChestText.text) + 1).ToString();
-                if (this.NumberOfKeys > 0)
-                {
-                    this.CItemText.text = (int.Parse(this.CItemText.text) + 1).ToString();
-                    this.NumberOfKeys--;
-                    this.KeyText.text = NumberOfKeys.ToString();
-                }
-                break;
-            case "D":
-                tempColor.a = 1f;
-                this.ChestDrop.color = tempColor;
-                this.ChestDrop.sprite = this.ChestD;
-                this.DChestText.text = (int.Parse(this.DChestText.text) + 1).ToString();
-                if (this.NumberOfKeys > 0)
-                {
-                    this.DItemText.text = (int.Parse(this.DItemText.text) + 1).ToString();
-                    this.NumberOfKeys--;
-                    this.KeyText.text = NumberOfKeys.ToString();
-                }
-                break;
-            case "None":
-                tempColor.a = 0f;
-                this.ChestDrop.color = tempColor;
-                break;
+            if (tmp.GeneratedChest == "None")
+            {
+                this.PlusKey.enabled = true;
+            }
         }
         switch (tmp.GeneratedPickup)
         {
@@ -252,5 +228,88 @@ public class Logic : MonoBehaviour
                 this.KeyDrop.color = tempColor;
                 break;
         }
+        switch (tmp.GeneratedChest)
+        {
+            case "S":
+                tempColor.a = 1f;
+                this.ChestDrop.color = tempColor;
+                this.ChestDrop.sprite = this.ChestS;
+                this.SChestText.text = (int.Parse(this.SChestText.text) + 1).ToString();
+                this.PlusSChest.enabled = true;
+                if (this.NumberOfKeys > 0)
+                {
+                    this.SItemText.text = (int.Parse(this.SItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                    this.PlusSItem.enabled = true;
+                    this.MinusKey.enabled = true;
+                }
+                break;
+            case "A":
+                tempColor.a = 1f;
+                this.ChestDrop.color = tempColor;
+                this.ChestDrop.sprite = this.ChestA;
+                this.AChestText.text = (int.Parse(this.AChestText.text) + 1).ToString();
+                this.PlusAChest.enabled = true;
+                if (this.NumberOfKeys > 0)
+                {
+                    this.AItemText.text = (int.Parse(this.AItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                    this.PlusAItem.enabled = true;
+                    this.MinusKey.enabled = true;
+                }
+                break;
+            case "B":
+                tempColor.a = 1f;
+                this.ChestDrop.color = tempColor;
+                this.ChestDrop.sprite = this.ChestB;
+                this.BChestText.text = (int.Parse(this.BChestText.text) + 1).ToString();
+                this.PlusBChest.enabled = true;
+                if (this.NumberOfKeys > 0)
+                {
+                    this.BItemText.text = (int.Parse(this.BItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                    this.PlusBItem.enabled = true;
+                    this.MinusKey.enabled = true;
+                }
+                break;
+            case "C":
+                tempColor.a = 1f;
+                this.ChestDrop.color = tempColor;
+                this.ChestDrop.sprite = this.ChestC;
+                this.CChestText.text = (int.Parse(this.CChestText.text) + 1).ToString();
+                this.PlusCChest.enabled = true;
+                if (this.NumberOfKeys > 0)
+                {
+                    this.CItemText.text = (int.Parse(this.CItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                    this.PlusCItem.enabled = true;
+                    this.MinusKey.enabled = true;
+                }
+                break;
+            case "D":
+                tempColor.a = 1f;
+                this.ChestDrop.color = tempColor;
+                this.ChestDrop.sprite = this.ChestD;
+                this.DChestText.text = (int.Parse(this.DChestText.text) + 1).ToString();
+                this.PlusDChest.enabled = true;
+                if (this.NumberOfKeys > 0)
+                {
+                    this.DItemText.text = (int.Parse(this.DItemText.text) + 1).ToString();
+                    this.NumberOfKeys--;
+                    this.KeyText.text = NumberOfKeys.ToString();
+                    this.PlusDItem.enabled = true;
+                    this.MinusKey.enabled = true;
+                }
+                break;
+            case "None":
+                tempColor.a = 0f;
+                this.ChestDrop.color = tempColor;
+                break;
+        }
+        
     }
 }
